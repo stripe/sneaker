@@ -56,6 +56,10 @@ credentials. It will look for the `AWS_ACCESS_KEY_ID` and
 `AWS_SECRET_ACCESS_KEY` environment variables, the default credentials
 profile (e.g. `~/.aws/credentials`), and finally any instance profile
 credentials for systems running on EC2 instances.
+Note: export AWS_REGION="<region>" variable if using EC2 Instance Profiles.
+This is in addition to SNEAKER_S3_PATH & SNEAKER_MASTER_KEY. Failure to
+export AWS_REGION will result in 'could not find region configuration'
+exception when running sneaker
 
 In general, if the `aws` command works, `sneaker` should work as well.
 

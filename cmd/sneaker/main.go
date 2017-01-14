@@ -34,9 +34,10 @@ Options:
   -h --help  Show this help information.
 
 Environment Variables:
-  SNEAKER_MASTER_KEY      The KMS key to use when encrypting secrets.
-  SNEAKER_MASTER_CONTEXT  The KMS encryption context to use for stored secrets.
-  SNEAKER_S3_PATH         Where secrets will be stored (e.g. s3://bucket/path).
+  SNEAKER_MASTER_KEY      (Required) The KMS key to use when encrypting secrets.
+  SNEAKER_MASTER_CONTEXT  (Optional) The KMS encryption context to use for stored secrets.
+  SNEAKER_S3_PATH         (Required) Where secrets will be stored (e.g. s3://bucket/path).
+  AWS_REGION		  (Required for Instance Profiles) Region of s3 Bucket (e.g. us-east-1, us-west-2).
 `
 
 func main() {
