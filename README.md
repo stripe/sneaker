@@ -1,4 +1,4 @@
-# Sneaker
+# Sneaker 
 
 [![Build Status](https://travis-ci.org/codahale/sneaker.svg?branch=master)](https://travis-ci.org/codahale/sneaker)
 [![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/codahale/sneaker/blob/master/LICENSE)
