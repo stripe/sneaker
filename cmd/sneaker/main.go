@@ -11,11 +11,13 @@ import (
 	"strings"
 	"text/tabwriter"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/codahale/sneaker"
-	"github.com/docopt/docopt-go"
+	docopt "github.com/docopt/docopt-go"
+	"github.com/tydavis/gobundledhttp"
 )
 
 const usage = `sneaker manages secrets.
@@ -219,6 +221,35 @@ func loadManager() *sneaker.Manager {
 		log.Fatalf("bad SNEAKER_MASTER_CONTEXT: %s", err)
 	}
 
+	profile := os.Getenv("AWS_PROFILE")
+	if profile != "" {
+		// Set up a full session
+		conf := aws.NewConfig()
+		// Create http client with timeout so aws package does not share default http
+		// client
+		conf.WithHTTPClient(gobundledhttp.NewClient())
+
+		s, e := session.NewSessionWithOptions(session.Options{
+			Config:            *conf,
+			SharedConfigState: session.SharedConfigEnable,
+			Profile:           profile,
+		})
+		if e != nil {
+			log.Fatalf("Unable to create session for %s: %v \n", profile, e)
+		}
+
+		// Use an aws profile
+		return &sneaker.Manager{
+			Objects: s3.New(s),
+			Envelope: sneaker.Envelope{
+				KMS: kms.New(s),
+			},
+			Bucket:            u.Host,
+			Prefix:            u.Path,
+			EncryptionContext: ctxt,
+			KeyId:             os.Getenv("SNEAKER_MASTER_KEY"),
+		}
+	}
 	return &sneaker.Manager{
 		Objects: s3.New(session.New()),
 		Envelope: sneaker.Envelope{
